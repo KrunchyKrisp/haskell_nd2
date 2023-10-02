@@ -70,9 +70,8 @@ capitalise x = [toUpper y | y <- x, elem y (['a'..'z'] ++ ['A'..'Z'])]
 --6
 itemTotal :: [(String, Float)] -> [(String, Float)]
 itemTotal [] = []
-itemTotal [x] = [x]
 itemTotal ((x, xf):ys) = (x, xf + sum [zf | (z, zf) <- ys, z == x]) : itemTotal [(z, zf) | (z, zf) <- ys, z /= x]
 
 itemDiscount :: String -> Integer -> [(String,Float)] -> [(String,Float)]
-itemDiscount x y [] = []
+itemDiscount _ _ [] = []
 itemDiscount x y z = [(zs, zf * fromIntegral (100 - y) / 100.0) | (zs, zf) <- z, zs == x] ++ [(zs, zf) | (zs, zf) <- z, zs /= x]
