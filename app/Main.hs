@@ -7,6 +7,8 @@ main :: IO ()
 main = do
     putStrLn "1. average"
     print (average [1..10])
+    print (average [1..100])
+    print (average [1..1000])
     putStrLn ""
     putStrLn "2. divides, divides2, isPrime"
     print (divides 100)
@@ -21,9 +23,16 @@ main = do
     putStrLn ""
     putStrLn "4. permut"
     print (permut [1,2,3] [3,2,1])
+    print (permut [1,2,3] [3,2])
+    print (permut [1,2,3] [3,2,1,1])
+    print (permut2 [1,2,3] [3,2,1])
+    print (permut2 [1,2,3] [3,2])
+    print (permut2 [1,2,3] [3,2,1,1])
     putStrLn ""
     putStrLn "5. capitalise"
     print (capitalise "abc123abc")
+    print (capitalise "abc123abcAAAAAAA")
+    print (capitalise "abc123abc!@#@#%#$%^")
     putStrLn ""
     putStrLn "6. itemTotal, itemDiscount"
     print (itemTotal [("a", 1), ("a", 2), ("b", 3), ("a", 3), ("b", 4)])
@@ -60,8 +69,19 @@ prefix (x:xs) (y:ys) = x == y && prefix xs ys
 substring x (y:ys) = prefix x (y:ys) || prefix x ys
 
 --4
-permut :: [Integer] -> [Integer] -> Bool
+permut, permut2 :: [Integer] -> [Integer] -> Bool
 permut x y = sort x == sort y
+
+permut2 [] [] = True
+permut2 (x:xs) (y:ys)
+    | length xs /= length ys = False
+    | x == y = permut2 xs ys
+    | otherwise = permut2 xs (y:(remove1 x ys))
+    where
+        remove1 _ [] = []
+        remove1 x (y:ys)
+            | x == y = ys
+            | otherwise = y:(remove1 x ys)
 
 --5
 capitalise :: String -> String
