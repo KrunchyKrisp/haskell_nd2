@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use infix" #-}
 module Main where
 
 import Data.Char
@@ -38,7 +40,7 @@ main = do
     print (itemTotal [("a", 1), ("a", 2), ("b", 3), ("a", 3), ("b", 4)])
     print (itemDiscount "a" 90 [("a", 1), ("a", 2), ("b", 3), ("a", 3), ("b", 4)])
     putStrLn ""
-    
+
 
 --1
 average :: [Float] -> Float
@@ -66,7 +68,8 @@ prefix [] _ = True
 prefix _ [] = False
 prefix (x:xs) (y:ys) = x == y && prefix xs ys
 
-substring x (y:ys) = prefix x (y:ys) || prefix x ys
+substring _ [] = False
+substring x (y:ys) = prefix x (y:ys) || substring x ys
 
 --4
 permut, permut2 :: [Integer] -> [Integer] -> Bool
@@ -76,12 +79,12 @@ permut2 [] [] = True
 permut2 (x:xs) (y:ys)
     | length xs /= length ys = False
     | x == y = permut2 xs ys
-    | otherwise = permut2 xs (y:(remove1 x ys))
+    | otherwise = permut2 xs (y:remove1 x ys)
     where
         remove1 _ [] = []
         remove1 x (y:ys)
             | x == y = ys
-            | otherwise = y:(remove1 x ys)
+            | otherwise = y:remove1 x ys
 
 --5
 capitalise :: String -> String
@@ -94,4 +97,4 @@ itemTotal ((x, xf):ys) = (x, xf + sum [zf | (z, zf) <- ys, z == x]) : itemTotal 
 
 itemDiscount :: String -> Integer -> [(String,Float)] -> [(String,Float)]
 itemDiscount _ _ [] = []
-itemDiscount x y z = [(zs, zf * fromIntegral (100 - y) / 100.0) | (zs, zf) <- z, zs == x] ++ [(zs, zf) | (zs, zf) <- z, zs /= x]
+itemDiscount x y z = [(zs, zf * fromIntegral (100 - if zs == x then y else 0) / 100.0) | (zs, zf) <- z]
